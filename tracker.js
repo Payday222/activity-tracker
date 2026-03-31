@@ -1,77 +1,54 @@
 const { exec } = require("child_process");
-const fs = require("fs");
 
 const windowHistory = [];
-
-function getActiveWindow() {
-  exec("xdotool getactivewindow getwindowname", (err, stdout) => {
-    if (err) {
-      console.error("Error getting active window:", err);
-      return;
-    }
-
-    const windowName = stdout
-    .trim()
-    .replace(/and \d more pages/g, "")
-    .trim();
-    if (!windowName) return;
-
-    const last = windowHistory[windowHistory.length - 1];
-
-    if (!last || last.name !== windowName) {
-      endPreviousWindow();
-
-      windowHistory.push({
-        name: windowName,
-        startTime: Date.now()
-      });
-
-      console.log("Switched to:", windowName);
-    }
-  });
-}
-
-setInterval(getActiveWindow, 1000);
 
 function endPreviousWindow() {
   const last = windowHistory[windowHistory.length - 1];
   if (last && !last.endTime) {
     last.endTime = Date.now();
     last.duration = (last.endTime - last.startTime) / 1000;
-    console.log(
-      `Window "${last.name}" was active for ${last.duration.toFixed(1)}s`
-    );
   }
 }
 
-function saveHistory() {
-  fs.writeFileSync(
-    "windowHistory.json",
-    JSON.stringify(windowHistory, null, 2)
-  );
-}
+function getActiveWindow() {
+  exec("xdotool getactivewindow getwindowname", (err, stdout) => {
+    if (err) {
+      
+      if (!/BadWindow/.test(err.message)) console.error(err);
+      return;
+    }
 
-setInterval(saveHistory, 10000);
+    let windowName = stdout.trim();
+    windowName = windowName.replace(/and \d+ other pages/g, "").trim();
+    if (!windowName) return;
+
+    const last = windowHistory[windowHistory.length - 1];
+
+    if (!last || last.name !== windowName) {
+      endPreviousWindow();
+      windowHistory.push({ name: windowName, startTime: Date.now() });
+    }
+  });
+}
 
 function getAppUsage() {
   const totals = {};
-
   for (const entry of windowHistory) {
-    if (!totals[entry.name]) {
-      totals[entry.name] = 0;
-    }
-
-    if (entry.endTime) {
-      totals[entry.name] += entry.duration;
-    } else {
-      totals[entry.name] += (Date.now() - entry.startTime) / 1000;
-    }
+    if (!totals[entry.name]) totals[entry.name] = 0;
+    totals[entry.name] += entry.endTime
+      ? entry.duration
+      : (Date.now() - entry.startTime) / 1000;
   }
-
   return totals;
 }
 
-setInterval(() => {
-  const stats = getAppUsage();
-  console.log("App usage total:", stats);
-}, 5000);
+
+function start(callback) {
+  setInterval(getActiveWindow, 1000);
+  setInterval(() => {
+    const stats = getAppUsage();
+    callback(stats);
+  }, 1000);
+}
+
+module.exports = { start };

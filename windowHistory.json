@@ -1,36 +1,6 @@
 [
   {
-    "name": "tracker.js - activity-tracker - Visual Studio Code",
-    "startTime": 1774957390278,
-    "endTime": 1774957391264,
-    "duration": 0.986
-  },
-  {
-    "name": "computationalThinking - Google Drive  - Personal - Microsoft​ Edge",
-    "startTime": 1774957391264,
-    "endTime": 1774957392265,
-    "duration": 1.001
-  },
-  {
-    "name": "bleck metle boy | Messenger  - Personal - Microsoft​ Edge",
-    "startTime": 1774957392265,
-    "endTime": 1774957409281,
-    "duration": 17.016
-  },
-  {
-    "name": "tracker.js - activity-tracker - Visual Studio Code",
-    "startTime": 1774957409282,
-    "endTime": 1774957414286,
-    "duration": 5.004
-  },
-  {
-    "name": "bleck metle boy | Messenger  - Personal - Microsoft​ Edge",
-    "startTime": 1774957414286,
-    "endTime": 1774957422291,
-    "duration": 8.005
-  },
-  {
-    "name": "tracker.js - activity-tracker - Visual Studio Code",
-    "startTime": 1774957422291
+    "name": "Activity Tracker",
+    "startTime": 1774958747682
   }
 ]

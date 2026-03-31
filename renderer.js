@@ -1,3 +1,4 @@
+
 const appDiv = document.getElementById("app");
 const pieColors = {};
 
@@ -86,3 +87,23 @@ lineChart.update();
   pieChart.data.datasets[0].backgroundColor = backgroundColors;
   pieChart.update();
 });
+
+window.api.onTopTenUpdate((topTen) => {
+    console.log("Top 10: ", topTen);
+    updateTopTenUI(topTen);
+});
+
+function updateTopTenUI(topTen) {
+  const list = document.getElementById("topTenList");
+  if (!list) return;
+
+  list.innerHTML = "";
+
+  topTen.forEach(entry => {
+    if (!entry || typeof entry.total !== "number") return;
+
+    const li = document.createElement("li");
+    li.textContent = `${entry.name} — ${entry.total.toFixed(2)}s`;
+    list.appendChild(li);
+  });
+}

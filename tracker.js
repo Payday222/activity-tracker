@@ -1,5 +1,5 @@
 const { exec } = require("child_process");
-
+const { BrowserWindow } = require("electron");
 const windowHistory = [];
 const topTen = [];
 
@@ -54,42 +54,22 @@ function start(callback) {
 }
 
 function FindTopTen() {
-  windowHistory.forEach(entry => entry.used = false);
-
-  for (let i = 0; i < 10; i++) {
-    let largest = null;
-
-    windowHistory.forEach(entry => {
-      if (entry.used) return;
-
-      let entryRuntime = entry.endTime
-        ? entry.duration
-        : (Date.now() - entry.startTime);
-
-      if (largest === null) {
-        largest = entry;
-        return;
-      }
-
-      let largestRuntime = largest.endTime
-        ? largest.duration
-        : (Date.now() - largest.startTime);
-
-      if (entryRuntime > largestRuntime) {
-        largest = entry;
-      }
-    });
-
-    topTen[i] = largest;
-
-    if (largest) {
-      largest.used = true;
-    } else {
-      break;
-    }
-  }
-
+  const totals = getAppUsage();
+  const arr = Object.entries(totals)
+    .map(([name, total]) => ({
+      name,
+      total: Number(total) || 0 
+    }))
+    .filter(entry => entry.total > 0); 
+  arr.sort((a, b) => b.total - a.total);
+  const topTen = arr.slice(0, 10);
   console.log(topTen);
+  const win = BrowserWindow.getAllWindows()[0];
+  if (win) {
+    win.webContents.send("top-ten-update", topTen);
+  }
 }
+
+
 
 module.exports = { start };

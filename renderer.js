@@ -16,11 +16,20 @@ const lineChart = new Chart(lineCtx, {
     type: "line",
     data: {
         labels: [], // timestamps
-        datasets: []
+        datasets: [],
+        borderColor: "#4fc3f7",
+        backgroundColor: "rgba(79, 195, 247, 0.2)",
+        tension: 0.3
     },
     options: {
         responsive: true,
-        plugins: { legend: { display: true } }
+        plugins: { legend: 
+            {   display: true,
+                labels: {
+                    color: "#ffffff"
+                }
+             } },
+             
     }
 });
 

@@ -48,9 +48,48 @@ function start(callback) {
   setInterval(getActiveWindow, 1000);
   setInterval(() => {
     const stats = getAppUsage();
-    callback(stats);
+    callback(stats);    
   }, 1000);
+  setInterval(FindTopTen, 1000);
 }
 
+function FindTopTen() {
+  windowHistory.forEach(entry => entry.used = false);
+
+  for (let i = 0; i < 10; i++) {
+    let largest = null;
+
+    windowHistory.forEach(entry => {
+      if (entry.used) return;
+
+      let entryRuntime = entry.endTime
+        ? entry.duration
+        : (Date.now() - entry.startTime);
+
+      if (largest === null) {
+        largest = entry;
+        return;
+      }
+
+      let largestRuntime = largest.endTime
+        ? largest.duration
+        : (Date.now() - largest.startTime);
+
+      if (entryRuntime > largestRuntime) {
+        largest = entry;
+      }
+    });
+
+    topTen[i] = largest;
+
+    if (largest) {
+      largest.used = true;
+    } else {
+      break;
+    }
+  }
+
+  console.log(topTen);
+}
 
 module.exports = { start };

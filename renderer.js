@@ -79,8 +79,8 @@ lineChart.update();
   const sorted = Object.entries(data).sort((a, b) => b[1] - a[1]);
   for (const [name, time] of sorted) {
     const div = document.createElement("div");
-    div.textContent = `${name}: ${time.toFixed(1)}s`;
-    // appDiv.appendChild(div); // no more raw text data
+    div.textContent = `${name}: ${formatTime(time)}`;
+    appDiv.appendChild(div); // yes more raw text data
   }
 
   pieChart.data.labels = labels;
@@ -90,7 +90,6 @@ lineChart.update();
 });
 
 window.api.onTopTenUpdate((topTen) => {
-    console.log("Top 10: ", topTen);
     updateTopTenUI(topTen);
 });
 
@@ -104,7 +103,33 @@ function updateTopTenUI(topTen) {
     if (!entry || typeof entry.total !== "number") return;
 
     const li = document.createElement("li");
-    li.textContent = `${entry.name} — ${entry.total.toFixed(2)}s`;
+    li.textContent = `${entry.name} — ${formatTime(entry.total)}`;
     list.appendChild(li);
   });
+}
+function formatTime(seconds) {
+  seconds = Math.floor(seconds);
+
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  if (hrs > 0) {
+    return `${hrs}h ${mins}m ${secs}s`;
+  }
+
+  if (mins > 0) {
+    return `${mins}m ${secs}s`;
+  }
+
+  return `${secs}s`;
+}
+
+window.api.onTotalUsetimeUpdate((totalUsetime) => {
+  TotalUsetimeUpdate(formatTime(totalUsetime/1000));
+});
+
+function TotalUsetimeUpdate(totalUsetime) {
+  const display = document.getElementById("usetime-display");
+  display.textContent = `Total usetime: ${totalUsetime}`;
 }

@@ -2,7 +2,7 @@ const { exec } = require("child_process");
 const { BrowserWindow } = require("electron");
 const windowHistory = [];
 const topTen = [];
-
+let ThisStartTime = 0;
 function endPreviousWindow() {
   const last = windowHistory[windowHistory.length - 1];
   if (last && !last.endTime) {
@@ -45,12 +45,14 @@ function getAppUsage() {
 
 
 function start(callback) {
+  ThisStartTime = Date.now();
   setInterval(getActiveWindow, 1000);
   setInterval(() => {
     const stats = getAppUsage();
     callback(stats);    
   }, 1000);
   setInterval(FindTopTen, 1000);
+  setInterval(CalculateTotalUseTime, 1000);
 }
 
 function FindTopTen() {
@@ -63,13 +65,21 @@ function FindTopTen() {
     .filter(entry => entry.total > 0); 
   arr.sort((a, b) => b.total - a.total);
   const topTen = arr.slice(0, 10);
-  console.log(topTen);
   const win = BrowserWindow.getAllWindows()[0];
   if (win) {
     win.webContents.send("top-ten-update", topTen);
   }
 }
 
+function CalculateTotalUseTime() {
+totalRuntime = Date.now() - ThisStartTime;
 
+const win = BrowserWindow.getAllWindows()[0];
+if(win) {
+  win.webContents.send("total-usetime-update", totalRuntime);
+}
+}
 
-module.exports = { start };
+module.exports = { start,
+  getAppUsage
+ };

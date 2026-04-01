@@ -1,6 +1,7 @@
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
 const tracker = require("./tracker");
+const historyTracker = require("./historyTracker");
 
 let mainWindow;
 
@@ -21,6 +22,7 @@ function createWindow() {
       mainWindow.webContents.send("usage-data", stats);
     }
   });
+  historyTracker.start();
 }
 
 app.whenReady().then(createWindow);

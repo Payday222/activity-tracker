@@ -5,5 +5,7 @@ contextBridge.exposeInMainWorld("api", {
     ipcRenderer.on("usage-data", (event, data) => callback(data)),
   
   onTopTenUpdate: (callback) =>
-    ipcRenderer.on("top-ten-update", (event, data) => callback(data))
+    ipcRenderer.on("top-ten-update", (event, data) => callback(data)),
+  onTotalUsetimeUpdate: (callback) => 
+    ipcRenderer.on("total-usetime-update", (event, data) => callback(data))
 });

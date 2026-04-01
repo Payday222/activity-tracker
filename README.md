@@ -1,4 +1,5 @@
 # activity-tracker
 
-to install this, install the .AppImage, make it executable and run it.
-Windows and macOS installers will be added later. For now you can clone this repo or download the .zip and use electron builder on your machine in the parent directory.
+to install this on Linux, download the .AppImage, make it executable and run it.
+to install this on macOS, download the .app from releases, unpack it and put the .app into your Applications folder. After that you can launch it like any other app.
+The windows installer will be added in future updates. For now you can clone this repo or download the .zip and use electron builder on your machine in the parent directory.

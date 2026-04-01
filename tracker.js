@@ -65,12 +65,28 @@ function getActiveWindowMac() {
 }
 
 // -----------------------------
-// WINDOWS IMPLEMENTATION (placeholder)
+// WINDOWS IMPLEMENTATION
 // -----------------------------
-
 async function getActiveWindowWindows() {
-  // Placeholder for future Windows support
+  try {
+    const activeWin = (await import('active-win')).default;
+    const result = await activeWin();
+
+    if (!result) return;
+
+    const appName = result.owner?.name || "Unknown";
+
+    const last = windowHistory[windowHistory.length - 1];
+
+    if (!last || last.name !== appName) {
+      endPreviousWindow();
+      windowHistory.push({ name: appName, startTime: Date.now() });
+    }
+  } catch (err) {
+    console.error("Windows active window error:", err);
+  }
 }
+
 
 // -----------------------------
 // UNIFIED DISPATCHER
@@ -117,7 +133,11 @@ function CalculateTotalUseTime() {
 function start(callback) {
   ThisStartTime = Date.now();
 
-  setInterval(pollActiveWindow, 1000);
+  setInterval(() => {
+  const result = pollActiveWindow();
+  if (result instanceof Promise) result.catch(console.error);
+}, 1000);
+
 
   setInterval(() => {
     const stats = getAppUsage();

@@ -12,7 +12,8 @@
     "electron-builder": "^26.8.1"
   },
   "dependencies": {
-    "chartjs-chart-treemap": "^3.1.0"
+    "chartjs-chart-treemap": "^3.1.0",
+    "active-win": "^8.0.0"
   },
   "build": {
     "appId": "com.michal.activitytracker",

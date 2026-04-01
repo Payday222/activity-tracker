@@ -6,6 +6,9 @@
     "start": "electron ."
   },
   "devDependencies": {
-    "electron": "^latest"
+    "electron": "9.2.0"
+  },
+  "dependencies": {
+    "chartjs-chart-treemap": "^3.1.0"
   }
 }

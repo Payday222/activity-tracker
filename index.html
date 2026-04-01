@@ -5,19 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Activity Tracker</title>
 
-    <style>
-        /* body {
-            background-color: #1e1e1e;
-        } */
-  #topTenList {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+<style>
+  body {
     font-family: system-ui, sans-serif;
     background: #1e1e1e;
-    border-radius: 8px;
-    padding: 12px;
     color: #eee;
+    margin: 20px;
+  }
+
+  /* --- CHART ROW (line chart + pie chart) --- */
+  #charts-row {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    margin-bottom: 20px;
+  }
+
+  #linechart-div {
+    flex: 1;
+  }
+
+  #piechart-div {
+    width: 220px;
+    height: 220px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* --- TOP 10 LIST --- */
+  #topTenList {
+    list-style: none;
+    padding: 12px;
+    margin: 0;
+    background: #1e1e1e;
+    border-radius: 8px;
   }
 
   #topTenList li {
@@ -44,31 +66,80 @@
     font-weight: 600;
     color: #4fc3f7;
   }
+
+  /* --- RAW DATA BOX --- */
+#raw-data-table {
+  width: 100%;
+  margin-top: 20px;
+  border-collapse: collapse;
+  background: #2a2a2a;
+  border-radius: 6px;
+  overflow: hidden;
+  font-size: 14px;
+}
+
+#raw-data-table th {
+  background: #333;
+  padding: 10px;
+  text-align: left;
+  color: #4fc3f7;
+  font-weight: 600;
+}
+
+#raw-data-table td {
+  padding: 8px 10px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  color: #eee;
+}
+
+#raw-data-table tr:hover td {
+  background: #3a3a3a;
+}
+
 </style>
+
 </head>
 <body>
-<div id="app">
-    <h1>Tracker</h1>
-</div>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<div id="linechart-div">
-    <canvas id="lineChart" width="500" height="300"></canvas>
+
+<h1>Current Session</h1>
+
+<!-- CHARTS ROW -->
+<div id="charts-row">
+  <div id="linechart-div">
+      <canvas id="lineChart" width="500" height="300"></canvas>
+  </div>
+
+  <div id="piechart-div">
+      <canvas id="pieChart" width="200" height="200"></canvas>
+  </div>
 </div>
 
-<div style="width: 200; height: 200;">
-    <canvas id="pieChart" width="200px" height="200px"></canvas>
-</div>
-
+<!-- TOP 10 LIST -->
 <div id="top-ten">
-    <ul id="topTenList"></ul>
+  <ul id="topTenList"></ul>
 </div>
 
-<div id="usetime">
-  <h3 id="usetime-display"></h3>
-</div>
+<!-- RAW DATA -->
+<table id="raw-data-table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Time</th>
+    </tr>
+  </thead>
+  <tbody id="raw-data-body"></tbody>
+</table>
+<h2>Today's History</h2>
+<canvas id="historyChart" width="600" height="400"></canvas>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-chart-treemap"></script>
 <script src="renderer.js"></script>
 
 </body>
+
 
 
 </html>

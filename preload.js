@@ -1,11 +1,8 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("api", {
-  onUsageData: (callback) =>
-    ipcRenderer.on("usage-data", (event, data) => callback(data)),
-  
-  onTopTenUpdate: (callback) =>
-    ipcRenderer.on("top-ten-update", (event, data) => callback(data)),
-  onTotalUsetimeUpdate: (callback) => 
-    ipcRenderer.on("total-usetime-update", (event, data) => callback(data))
+  onUsageData: (cb) => ipcRenderer.on("usage-data", (_, d) => cb(d)),
+  onTopTenUpdate: (cb) => ipcRenderer.on("top-ten-update", (_, d) => cb(d)),
+  onTotalUsetimeUpdate: (cb) => ipcRenderer.on("total-usetime-update", (_, d) => cb(d)),
+  onTodayHistory: (cb) => ipcRenderer.on("today-history", (_, d) => cb(d))
 });

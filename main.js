@@ -18,11 +18,34 @@ function createWindow() {
   mainWindow.loadFile("index.html");
 
   tracker.start((stats) => {
-    if (mainWindow && mainWindow.webContents) {
+    if (mainWindow && !mainWindow.isDestroyed()) {
       mainWindow.webContents.send("usage-data", stats);
     }
   });
+
   historyTracker.start();
+
+  setInterval(() => {
+    const totals = historyTracker.UpdateDailyHistory();
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.send("today-history", totals);
+    }
+  }, 1000);
 }
 
-app.whenReady().then(createWindow);
+
+app.whenReady().then(() => {
+  createWindow();
+
+  app.on("activate", () => {
+    if (BrowserWindow.getAllWindows().length === 0) {
+      createWindow();
+    }
+  });
+});
+
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") {
+    app.quit();
+  }
+});
